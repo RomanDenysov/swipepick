@@ -59,9 +59,7 @@ export function usePhotos(): UsePhotosReturn {
       after: cursor,
     });
 
-    const unviewedAssets = result.assets.filter(
-      (asset) => !viewedIdsRef.current.has(asset.id)
-    );
+    const unviewedAssets = result.assets.filter((asset) => !viewedIdsRef.current.has(asset.id));
 
     return {
       assets: unviewedAssets,

@@ -1,9 +1,9 @@
-import { OnboardingButton } from "@/components/onboarding/OnboardingButton";
-import { OnboardingContainer } from "@/components/onboarding/OnboardingContainer";
-import { theme } from "@/constants/theme";
-import { useThemeColor } from "@/hooks/use-theme-color";
-import { useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { OnboardingButton } from '@/components/onboarding/onboarding-button';
+import { OnboardingContainer } from '@/components/onboarding/onboarding-container';
+import { theme } from '@/constants/theme';
+import { useThemeColor } from '@/hooks/use-theme-color';
+import { useRouter } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function TutorialScreen() {
   const router = useRouter();
@@ -11,16 +11,14 @@ export default function TutorialScreen() {
   const textSecondaryColor = useThemeColor(theme.color.textSecondary);
 
   const handleContinue = () => {
-    router.push("/onboarding/permissions");
+    router.push('/onboarding/permissions');
   };
 
   return (
     <OnboardingContainer>
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={[styles.title, { color: textColor }]}>
-            How to Use SwipePick
-          </Text>
+          <Text style={[styles.title, { color: textColor }]}>How to Use SwipePick</Text>
           <Text style={[styles.subtitle, { color: textSecondaryColor }]}>
             Swipe in different directions to organize your photos
           </Text>
@@ -32,16 +30,12 @@ export default function TutorialScreen() {
               <Text style={styles.gestureArrow}>←</Text>
             </View>
             <View style={styles.gestureInfo}>
-              <Text style={[styles.gestureTitle, { color: textColor }]}>
-                Swipe Left
-              </Text>
+              <Text style={[styles.gestureTitle, { color: textColor }]}>Swipe Left</Text>
               <Text style={[styles.gestureDescription, { color: textSecondaryColor }]}>
                 Delete photo
               </Text>
             </View>
-            <Text style={[styles.gestureEmoji, { color: theme.colorRed }]}>
-              🗑️
-            </Text>
+            <Text style={[styles.gestureEmoji, { color: theme.colorRed }]}>🗑️</Text>
           </View>
 
           <View style={styles.gesture}>
@@ -49,16 +43,12 @@ export default function TutorialScreen() {
               <Text style={styles.gestureArrow}>→</Text>
             </View>
             <View style={styles.gestureInfo}>
-              <Text style={[styles.gestureTitle, { color: textColor }]}>
-                Swipe Right
-              </Text>
+              <Text style={[styles.gestureTitle, { color: textColor }]}>Swipe Right</Text>
               <Text style={[styles.gestureDescription, { color: textSecondaryColor }]}>
                 Add to favorites
               </Text>
             </View>
-            <Text style={[styles.gestureEmoji, { color: theme.colorDarkGreen }]}>
-              ❤️
-            </Text>
+            <Text style={[styles.gestureEmoji, { color: theme.colorDarkGreen }]}>❤️</Text>
           </View>
 
           <View style={styles.gesture}>
@@ -66,16 +56,12 @@ export default function TutorialScreen() {
               <Text style={styles.gestureArrow}>↑</Text>
             </View>
             <View style={styles.gestureInfo}>
-              <Text style={[styles.gestureTitle, { color: textColor }]}>
-                Swipe Up
-              </Text>
+              <Text style={[styles.gestureTitle, { color: textColor }]}>Swipe Up</Text>
               <Text style={[styles.gestureDescription, { color: textSecondaryColor }]}>
                 Skip for now
               </Text>
             </View>
-            <Text style={[styles.gestureEmoji, { color: textSecondaryColor }]}>
-              ⏭️
-            </Text>
+            <Text style={[styles.gestureEmoji, { color: textSecondaryColor }]}>⏭️</Text>
           </View>
         </View>
 
@@ -90,23 +76,23 @@ export default function TutorialScreen() {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     paddingVertical: theme.space32,
   },
   header: {
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: theme.space32,
   },
   title: {
     fontSize: theme.fontSize34,
     fontFamily: theme.fontFamilyBold,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: theme.space12,
   },
   subtitle: {
     fontSize: theme.fontSize18,
     fontFamily: theme.fontFamily,
-    textAlign: "center",
+    textAlign: 'center',
     paddingHorizontal: theme.space16,
   },
   gestures: {
@@ -114,8 +100,8 @@ const styles = StyleSheet.create({
     paddingVertical: theme.space32,
   },
   gesture: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: theme.space16,
     paddingVertical: theme.space12,
   },
@@ -123,8 +109,8 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: theme.borderRadius12,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   swipeLeft: {
     backgroundColor: `${theme.colorRed}20`,

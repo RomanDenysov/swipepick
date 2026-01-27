@@ -1,12 +1,12 @@
-import { OnboardingButton } from "@/components/onboarding/OnboardingButton";
-import { OnboardingContainer } from "@/components/onboarding/OnboardingContainer";
-import { theme } from "@/constants/theme";
-import { useThemeColor } from "@/hooks/use-theme-color";
-import { useAppActions } from "@/stores/app-store";
-import * as MediaLibrary from "expo-media-library";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Linking, Platform, StyleSheet, Text, View } from "react-native";
+import { OnboardingButton } from '@/components/onboarding/onboarding-button';
+import { OnboardingContainer } from '@/components/onboarding/onboarding-container';
+import { theme } from '@/constants/theme';
+import { useThemeColor } from '@/hooks/use-theme-color';
+import { useAppActions } from '@/stores/app-store';
+import * as MediaLibrary from 'expo-media-library';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Linking, Platform, StyleSheet, Text, View } from 'react-native';
 
 export default function PermissionsScreen() {
   const router = useRouter();
@@ -14,30 +14,30 @@ export default function PermissionsScreen() {
   const textColor = useThemeColor(theme.color.text);
   const textSecondaryColor = useThemeColor(theme.color.textSecondary);
   const [isRequesting, setIsRequesting] = useState(false);
-  const [permissionStatus, setPermissionStatus] = useState<
-    "undetermined" | "granted" | "denied"
-  >("undetermined");
+  const [permissionStatus, setPermissionStatus] = useState<'undetermined' | 'granted' | 'denied'>(
+    'undetermined'
+  );
 
   const handleRequestPermission = async () => {
     setIsRequesting(true);
     try {
       const { status } = await MediaLibrary.requestPermissionsAsync();
-      setPermissionStatus(status === "granted" ? "granted" : "denied");
+      setPermissionStatus(status === 'granted' ? 'granted' : 'denied');
 
-      if (status === "granted") {
+      if (status === 'granted') {
         completeOnboarding();
-        router.replace("/(tabs)/swipe");
+        router.replace('/(main)/swipe');
       }
     } catch (error) {
-      setPermissionStatus("denied");
+      setPermissionStatus('denied');
     } finally {
       setIsRequesting(false);
     }
   };
 
   const handleOpenSettings = () => {
-    if (Platform.OS === "ios") {
-      Linking.openURL("app-settings:");
+    if (Platform.OS === 'ios') {
+      Linking.openURL('app-settings:');
     } else {
       Linking.openSettings();
     }
@@ -45,7 +45,7 @@ export default function PermissionsScreen() {
 
   const handleSkip = () => {
     completeOnboarding();
-    router.replace("/(tabs)/swipe");
+    router.replace('/(main)/swipe');
   };
 
   return (
@@ -53,12 +53,9 @@ export default function PermissionsScreen() {
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={[styles.icon, { color: textColor }]}>📷</Text>
-          <Text style={[styles.title, { color: textColor }]}>
-            Photo Access Required
-          </Text>
+          <Text style={[styles.title, { color: textColor }]}>Photo Access Required</Text>
           <Text style={[styles.subtitle, { color: textSecondaryColor }]}>
-            SwipePick needs access to your photo library to help you organize
-            your photos.
+            SwipePick needs access to your photo library to help you organize your photos.
           </Text>
         </View>
 
@@ -83,40 +80,28 @@ export default function PermissionsScreen() {
           </View>
         </View>
 
-        {permissionStatus === "denied" && (
+        {permissionStatus === 'denied' && (
           <View style={styles.errorContainer}>
             <Text style={[styles.errorText, { color: textSecondaryColor }]}>
-              Permission denied. Please enable photo access in Settings to use
-              SwipePick.
+              Permission denied. Please enable photo access in Settings to use SwipePick.
             </Text>
           </View>
         )}
 
         <View style={styles.footer}>
-          {permissionStatus === "denied" ? (
+          {permissionStatus === 'denied' ? (
             <>
-              <OnboardingButton
-                label="Open Settings"
-                onPress={handleOpenSettings}
-              />
-              <OnboardingButton
-                label="Skip for Now"
-                onPress={handleSkip}
-                variant="secondary"
-              />
+              <OnboardingButton label="Open Settings" onPress={handleOpenSettings} />
+              <OnboardingButton label="Skip for Now" onPress={handleSkip} variant="secondary" />
             </>
           ) : (
             <>
               <OnboardingButton
-                label={isRequesting ? "Requesting..." : "Allow Access"}
+                label={isRequesting ? 'Requesting...' : 'Allow Access'}
                 onPress={handleRequestPermission}
                 variant="primary"
               />
-              <OnboardingButton
-                label="Skip for Now"
-                onPress={handleSkip}
-                variant="secondary"
-              />
+              <OnboardingButton label="Skip for Now" onPress={handleSkip} variant="secondary" />
             </>
           )}
         </View>
@@ -128,11 +113,11 @@ export default function PermissionsScreen() {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     paddingVertical: theme.space32,
   },
   header: {
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: theme.space32,
   },
   icon: {
@@ -142,13 +127,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: theme.fontSize34,
     fontFamily: theme.fontFamilyBold,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: theme.space12,
   },
   subtitle: {
     fontSize: theme.fontSize16,
     fontFamily: theme.fontFamily,
-    textAlign: "center",
+    textAlign: 'center',
     paddingHorizontal: theme.space16,
     lineHeight: theme.fontSize16 * 1.5,
   },
@@ -157,8 +142,8 @@ const styles = StyleSheet.create({
     paddingVertical: theme.space24,
   },
   infoItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: theme.space16,
   },
   infoIcon: {
@@ -178,7 +163,7 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: theme.fontSize14,
     fontFamily: theme.fontFamily,
-    textAlign: "center",
+    textAlign: 'center',
     lineHeight: theme.fontSize14 * 1.4,
   },
   footer: {

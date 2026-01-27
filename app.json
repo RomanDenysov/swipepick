@@ -41,7 +41,7 @@
           }
         }
       ],
-"expo-sqlite"
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true,

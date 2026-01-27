@@ -5,17 +5,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import type { Asset } from 'expo-media-library';
 import { StyleSheet, Text, View } from 'react-native';
 
-
 interface Props {
   asset: Asset;
 }
 
 export const PhotoMeta = ({ asset }: Props) => {
   return (
-    <LinearGradient
-      colors={['transparent', 'rgba(0,0,0,0.8)']}
-      style={styles.container}
-    >
+    <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.container}>
       <Text style={styles.filename} numberOfLines={1}>
         {asset.filename}
       </Text>

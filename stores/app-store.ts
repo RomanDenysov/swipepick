@@ -1,23 +1,14 @@
-import { createMMKV } from 'react-native-mmkv';
+import { mmkvStorage } from '@/lib/mmkv';
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-
-const storage = createMMKV();
-
-
-const mmkvStorage = {
-  getItem: (name: string): string | null => storage.getString(name) ?? null,
-  setItem: (name: string, value: string) => storage.set(name, value),
-  removeItem: (name: string) => { storage.remove(name); },
-};
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 type ThemeMode = 'system' | 'light' | 'dark';
 
 type AppState = {
-    isOnboardingCompleted: boolean;
-    themeMode: ThemeMode;
-    hapticEnabled: boolean;
-}
+  isOnboardingCompleted: boolean;
+  themeMode: ThemeMode;
+  hapticEnabled: boolean;
+};
 
 type AppActions = {
   completeOnboarding: () => void;
@@ -35,31 +26,37 @@ const initialState: AppState = {
 };
 
 export const useAppStore = create<AppStore>()(
-    persist((set) =>({
+  devtools(
+    persist(
+      (set) => ({
         ...initialState,
 
         actions: {
-            completeOnboarding: () => set({ isOnboardingCompleted: true }),
-            setThemeMode: (themeMode) => set({ themeMode }),
-            setHapticEnabled: (enabled) => set({ hapticEnabled: enabled }),
-            reset: () => set(initialState),
-        }
-    }), {
+          completeOnboarding: () => set({ isOnboardingCompleted: true }),
+          setThemeMode: (themeMode) => set({ themeMode }),
+          setHapticEnabled: (enabled) => set({ hapticEnabled: enabled }),
+          reset: () => set(initialState),
+        },
+      }),
+      {
         name: 'app-store',
         storage: createJSONStorage<AppState>(() => mmkvStorage),
         partialize: (state) => ({
-            isOnboardingCompleted: state.isOnboardingCompleted,
-            themeMode: state.themeMode,
-            hapticEnabled: state.hapticEnabled,
+          isOnboardingCompleted: state.isOnboardingCompleted,
+          themeMode: state.themeMode,
+          hapticEnabled: state.hapticEnabled,
         }),
-    }) );
+      }
+    ),
+    {
+      name: 'app-store',
+      enabled: __DEV__,
+    }
+  )
+);
 
+export const useIsOnboardingCompleted = () => useAppStore((s) => s.isOnboardingCompleted);
 
-export const useIsOnboardingCompleted = () =>
-  useAppStore((s) => s.isOnboardingCompleted);
+export const useThemeMode = () => useAppStore((s) => s.themeMode);
 
-export const useThemeMode = () =>
-  useAppStore((s) => s.themeMode);
-
-export const useAppActions = () =>
-  useAppStore((s) => s.actions);
+export const useAppActions = () => useAppStore((s) => s.actions);

@@ -1,15 +1,24 @@
+import { ActionBar } from '@/components/cards/action-bar';
 import { CardStack } from '@/components/cards/card-stack';
-import { SwipeOverlayCard } from '@/components/swipe-overlay-card';
+import { SwipeHeader } from '@/components/swipe-header';
 import { usePhotos } from '@/hooks/use-photos';
 import { useSwipeActions } from '@/hooks/use-swipe-actions';
+import { useTrashQueueCount } from '@/stores/session-store';
 import { Asset } from 'expo-media-library';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SwipeScreen() {
   const { assets, isLoading, error, remainingCount } = usePhotos();
+  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { onSwipeLeft, onSwipeRight, onSwipeUp } = useSwipeActions();
+  const { onSwipeLeft, onSwipeRight, onSwipeUp, undo } = useSwipeActions();
+  const { bottom, top } = useSafeAreaInsets();
+  const trashQueueCount = useTrashQueueCount();
+
+  const currentAsset = assets[currentIndex];
 
   const handleSwipe = (direction: 'left' | 'right' | 'up', asset: Asset) => {
     if (direction === 'left') {
@@ -20,6 +29,19 @@ export default function SwipeScreen() {
       onSwipeUp(asset.id);
     }
     setCurrentIndex((prev) => prev + 1);
+  };
+
+  const handleButtonPress = (direction: 'left' | 'right' | 'up') => {
+    if (currentAsset) {
+      handleSwipe(direction, currentAsset);
+    }
+  };
+
+  const handleUndo = () => {
+    const lastAction = undo();
+    if (lastAction) {
+      setCurrentIndex((prev) => Math.max(0, prev - 1));
+    }
   };
 
   if (isLoading && assets.length === 0) {
@@ -40,15 +62,31 @@ export default function SwipeScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <CardStack assets={assets} currentIndex={currentIndex} onSwipe={handleSwipe} />
-      <SwipeOverlayCard />
+    <View style={[styles.container, { paddingBottom: bottom, paddingTop: top }]}>
+      <SwipeHeader/>
+      <View style={styles.cardArea}>
+        <CardStack assets={assets} currentIndex={currentIndex} onSwipe={handleSwipe} />
+      </View>
+      {currentAsset && (
+        <ActionBar
+          onTrash={() => handleButtonPress('left')}
+          onKeep={() => handleButtonPress('right')}
+          onFavorite={() => handleButtonPress('up')}
+          trashCount={trashQueueCount}
+          favoriteCount={0}
+          onLongTrashPress={() => {}}
+          onLongFavoritePress={() => router.push('/favorites')}
+        />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  cardArea: {
     flex: 1,
   },
   centered: {

@@ -1,51 +1,50 @@
-import * as Device from "expo-device";
+import * as Device from 'expo-device';
 
 const SPACE_SCALE = 1.33;
 const FONT_SCALE = 1.2;
 
-const isIpad = Device.osName === "iPadOS";
-export const spaceScale = (value: number) => 
-    isIpad ? Math.round(value * SPACE_SCALE) : value
-const fontScale = (size: number) => isIpad ? Math.round(size * FONT_SCALE) : size
+const isIpad = Device.osName === 'iPadOS';
+export const spaceScale = (value: number) => (isIpad ? Math.round(value * SPACE_SCALE) : value);
+const fontScale = (size: number) => (isIpad ? Math.round(size * FONT_SCALE) : size);
 
 export const theme = {
-  colorRed: "#FF0000",
-  colorWhite: "#FFFFFF",
-  colorBlack: "#000000",
-  colorLightGreen: "#9BDFB1",
-  colorDarkGreen: "#1AC9A2",
-  colorGrey: "#ADB5BD",
+  colorRed: '#FF0000',
+  colorWhite: '#FFFFFF',
+  colorBlack: '#000000',
+  colorLightGreen: '#9BDFB1',
+  colorDarkGreen: '#1AC9A2',
+  colorGrey: '#ADB5BD',
 
   color: {
     reactBlue: {
-      light: "#087EA4",
-      dark: "#58C4DC",
+      light: '#087EA4',
+      dark: '#58C4DC',
     },
     transparent: {
-      light: "rgba(255,255,255,0)",
-      dark: "rgba(0,0,0,0)",
+      light: 'rgba(255,255,255,0)',
+      dark: 'rgba(0,0,0,0)',
     },
-    text: { light: "#121212", dark: "#FFFFFF" },
-    textSecondary: { light: "#606060", dark: "#CCCCCC" },
-    background: { light: "#FFFFFF", dark: "#000000" },
+    text: { light: '#121212', dark: '#FFFFFF' },
+    textSecondary: { light: '#606060', dark: '#CCCCCC' },
+    background: { light: '#FFFFFF', dark: '#000000' },
     backgroundSecondary: {
-      light: "#f1f1f1",
-      dark: "#242424",
+      light: '#f1f1f1',
+      dark: '#242424',
     },
     backgroundTertiary: {
-      light: "#f5f5f5",
-      dark: "#141414",
+      light: '#f5f5f5',
+      dark: '#141414',
     },
     backgroundElement: {
-      light: "#F1F1F1",
-      dark: "#141414",
+      light: '#F1F1F1',
+      dark: '#141414',
     },
-    border: { light: "#D9D9D0", dark: "#363A3F" },
+    border: { light: '#D9D9D0', dark: '#363A3F' },
   },
 
-  darkActiveContent: "rgba(255,255,255, 0.3)",
+  darkActiveContent: 'rgba(255,255,255, 0.3)',
 
-  lightActiveContent: "rgba(0,0,0, 0.1)",
+  lightActiveContent: 'rgba(0,0,0, 0.1)',
 
   space2: spaceScale(2),
   space4: spaceScale(4),
@@ -68,17 +67,17 @@ export const theme = {
   fontSize34: fontScale(34),
   fontSize42: fontScale(42),
 
-  fontFamilyLight: "Montserrat-Light",
-  fontFamilyLightItalic: "Montserrat-LightItalic",
+  fontFamilyLight: 'Montserrat-Light',
+  fontFamilyLightItalic: 'Montserrat-LightItalic',
 
-  fontFamily: "Montserrat-Medium",
-  fontFamilyItalic: "Montserrat-MediumItalic",
+  fontFamily: 'Montserrat-Medium',
+  fontFamilyItalic: 'Montserrat-MediumItalic',
 
-  fontFamilySemiBold: "Montserrat-SemiBold",
-  fontFamilySemiBoldItalic: "Montserrat-SemiBoldItalic",
+  fontFamilySemiBold: 'Montserrat-SemiBold',
+  fontFamilySemiBoldItalic: 'Montserrat-SemiBoldItalic',
 
-  fontFamilyBold: "Montserrat-Bold",
-  fontFamilyBoldItalic: "Montserrat-BoldItalic",
+  fontFamilyBold: 'Montserrat-Bold',
+  fontFamilyBoldItalic: 'Montserrat-BoldItalic',
 
   borderRadius4: 4,
   borderRadius6: 6,
@@ -92,6 +91,6 @@ export const theme = {
   borderRadius80: 80,
 
   dropShadow: {
-    boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",
+    boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1)',
   },
 };

@@ -20,9 +20,7 @@ export const markPhotoViewed = (photoId: string, action: PhotoAction): void => {
 };
 
 export const getViewedPhotos = (): Set<string> => {
-  const rows = db.getAllSync<{ photo_id: string }>(
-    'SELECT photo_id FROM viewed_photos'
-  );
+  const rows = db.getAllSync<{ photo_id: string }>('SELECT photo_id FROM viewed_photos');
   return new Set(rows.map((r) => r.photo_id));
 };
 
@@ -34,18 +32,19 @@ export const getTrashQueue = (): ViewedPhoto[] => {
 
 export const markPhotosDeleted = (photoIds: string[]): void => {
   if (photoIds.length === 0) return;
-  
+
   const placeholders = photoIds.map(() => '?').join(',');
   const now = Date.now();
-  db.runSync(
-    `UPDATE viewed_photos SET deleted_at = ? WHERE photo_id IN (${placeholders})`,
-    [now, ...photoIds]
-  );
+  db.runSync(`UPDATE viewed_photos SET deleted_at = ? WHERE photo_id IN (${placeholders})`, [
+    now,
+    ...photoIds,
+  ]);
 };
 
 export const updatePhotoAction = (photoId: string, action: PhotoAction): void => {
-  db.runSync(
-    'UPDATE viewed_photos SET action = ?, viewed_at = ? WHERE photo_id = ?',
-    [action, Date.now(), photoId]
-  );
+  db.runSync('UPDATE viewed_photos SET action = ?, viewed_at = ? WHERE photo_id = ?', [
+    action,
+    Date.now(),
+    photoId,
+  ]);
 };
