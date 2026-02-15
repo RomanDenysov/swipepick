@@ -1,5 +1,6 @@
 import { ActionBar } from '@/components/cards/action-bar';
 import { CardStack } from '@/components/cards/card-stack';
+import { StatsBar } from '@/components/stats-bar';
 import { SwipeHeader } from '@/components/swipe-header';
 import { usePhotos } from '@/hooks/use-photos';
 import { useSwipeActions } from '@/hooks/use-swipe-actions';
@@ -64,11 +65,21 @@ export default function SwipeScreen() {
   return (
     <View style={[styles.container, { paddingBottom: bottom, paddingTop: top }]}>
       <SwipeHeader/>
+      <StatsBar
+        trashCount={trashQueueCount}
+        favoriteCount={0}
+        isPro={false}
+        trashLimit={50}
+        favoriteLimit={50}
+        onTrashPress={() => router.push('/trash')}
+        onFavoritePress={() => router.push('/favorites')}
+      />
       <View style={styles.cardArea}>
         <CardStack assets={assets} currentIndex={currentIndex} onSwipe={handleSwipe} />
       </View>
-      {currentAsset && (
         <ActionBar
+          isEmpty={!currentAsset}
+          onRefresh={() => {}}
           onTrash={() => handleButtonPress('left')}
           onKeep={() => handleButtonPress('right')}
           onFavorite={() => handleButtonPress('up')}
@@ -77,7 +88,6 @@ export default function SwipeScreen() {
           onLongTrashPress={() => {}}
           onLongFavoritePress={() => router.push('/favorites')}
         />
-      )}
     </View>
   );
 }

@@ -10,7 +10,7 @@ export function SwipeHeader() {
   const trashQueueCount = useTrashQueueCount();
   const undoStack = useUndoStack();
   const router = useRouter()
-  const { popUndo } = useSessionActions();
+  const { popUndo, resetTrashQueue } = useSessionActions();
   const canUndo = undoStack.length > 0;
 
   return (
@@ -29,6 +29,9 @@ export function SwipeHeader() {
       <ThemedText fontSize={16} fontWeight='semibold' color={theme.color.background}>{trashQueueCount}/50</ThemedText>
 </Pressable>
 </Link>
+      <Pressable onPress={resetTrashQueue} style={styles.button}>
+        <Ionicons name="refresh" size={24} />
+      </Pressable>
       <Pressable onPress={() => router.push('/settings')}>
         <Ionicons name="ellipsis-horizontal" size={24} />
       </Pressable>

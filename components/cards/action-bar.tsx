@@ -9,6 +9,8 @@ interface Props {
   favoriteCount: number;
   onLongTrashPress: () => void;
   onLongFavoritePress: () => void;
+  isEmpty: boolean;
+  onRefresh: () => void;
 }
 
 export function ActionBar({
@@ -19,12 +21,15 @@ export function ActionBar({
   favoriteCount,
   onLongTrashPress,
   onLongFavoritePress,
+  isEmpty,
+  onRefresh,
 }: Props) {
   return (
     <View style={styles.container}>
       <Pressable
         style={({ pressed }) => [styles.button, styles.trashButton, pressed && styles.pressed]}
         onPress={onTrash}
+        disabled={isEmpty}
         onLongPress={onLongTrashPress}
       >
         <Ionicons name="trash" size={28} color="#fff" />
@@ -35,13 +40,22 @@ export function ActionBar({
         )}
       </Pressable>
 
-      <Pressable
-        style={({ pressed }) => [styles.button, styles.favoriteButton, pressed && styles.pressed]}
-        onPress={onFavorite}
-        onLongPress={onLongFavoritePress}
-      >
-        <Ionicons name="star" size={32} color="#fff" />
-      </Pressable>
+      {isEmpty ? (
+        <Pressable
+          style={[styles.button, styles.refreshButton]}
+          onPress={onRefresh}
+        >
+          <Ionicons name="refresh" size={32} color="#fff" />
+        </Pressable>
+      ) : (
+        <Pressable
+          style={[styles.button, styles.favoriteButton]}
+          onPress={onFavorite}
+          disabled={isEmpty}
+        >
+          <Ionicons name="star" size={32} color="#fff" />
+        </Pressable>
+      )}
 
       <Pressable
         style={({ pressed }) => [styles.button, styles.keepButton, pressed && styles.pressed]}
@@ -107,5 +121,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: '#000',
+  },
+   refreshButton: {
+    backgroundColor: '#3498db',
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+  },
+  disabled: {
+    opacity: 0.3,
   },
 });

@@ -11,8 +11,7 @@ export default function TabsLayout() {
   const { isDark } = useAppTheme();
   const isIOS = Platform.OS === 'ios';
 
-    const tabBarBackgroundColor = useThemeColor(theme.color.background);
-
+  const tabBarBackgroundColor = useThemeColor(theme.color.background);
 
   return (
     <Stack>
