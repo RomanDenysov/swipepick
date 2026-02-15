@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import * as MediaLibrary from 'expo-media-library';
 
-import { getViewedPhotos } from '@/db/queries/viewed-photos';
+import { useViewedPhotoIds } from '@/stores/app-store';
 
 const BATCH_SIZE = 50;
 
@@ -30,11 +30,8 @@ interface BatchResult {
   totalCount: number;
 }
 
-/**
- * Hook for loading unviewed photos from the device media library.
- * Filters out already-viewed photos and supports pagination.
- */
 export function usePhotos(): UsePhotosReturn {
+  const viewedIds = useViewedPhotoIds();
   const [assets, setAssets] = useState<MediaLibrary.Asset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,14 +40,12 @@ export function usePhotos(): UsePhotosReturn {
     totalCount: 0,
   });
 
-  // Refs to avoid stale closures and track operation state
-  const viewedIdsRef = useRef<Set<string>>(new Set());
+  const viewedIdsRef = useRef(viewedIds);
+  viewedIdsRef.current = viewedIds;
+
   const isLoadingRef = useRef(false);
   const isMountedRef = useRef(true);
 
-  /**
-   * Fetches a batch of photos from the media library, filtering out viewed ones.
-   */
   async function fetchBatch(cursor?: string): Promise<BatchResult> {
     const result = await MediaLibrary.getAssetsAsync({
       mediaType: MediaLibrary.MediaType.photo,
@@ -69,9 +64,6 @@ export function usePhotos(): UsePhotosReturn {
     };
   }
 
-  /**
-   * Loads photos until we accumulate enough or exhaust the library.
-   */
   async function loadUntilFilled(
     cursor?: string,
     existingAssets: MediaLibrary.Asset[] = [],
@@ -103,9 +95,6 @@ export function usePhotos(): UsePhotosReturn {
     };
   }
 
-  /**
-   * Performs the initial load of photos.
-   */
   const initialLoad = useCallback(async (): Promise<void> => {
     if (isLoadingRef.current) return;
 
@@ -125,7 +114,6 @@ export function usePhotos(): UsePhotosReturn {
     }
 
     try {
-      viewedIdsRef.current = await getViewedPhotos();
       const result = await loadUntilFilled();
 
       if (isMountedRef.current) {
@@ -149,9 +137,6 @@ export function usePhotos(): UsePhotosReturn {
     }
   }, []);
 
-  /**
-   * Loads more photos (pagination).
-   */
   const loadMore = useCallback(async (): Promise<void> => {
     if (isLoadingRef.current || !loadState.hasMore) return;
 
@@ -183,9 +168,6 @@ export function usePhotos(): UsePhotosReturn {
     }
   }, [loadState.endCursor, loadState.hasMore]);
 
-  /**
-   * Refreshes all photos from scratch.
-   */
   const refresh = useCallback(async (): Promise<void> => {
     setAssets([]);
     setLoadState({ hasMore: true, totalCount: 0 });
@@ -193,7 +175,6 @@ export function usePhotos(): UsePhotosReturn {
     await initialLoad();
   }, [initialLoad]);
 
-  // Mount/unmount tracking and initial load
   useEffect(() => {
     isMountedRef.current = true;
     initialLoad();

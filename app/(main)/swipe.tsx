@@ -4,7 +4,7 @@ import { StatsBar } from '@/components/stats-bar';
 import { SwipeHeader } from '@/components/swipe-header';
 import { usePhotos } from '@/hooks/use-photos';
 import { useSwipeActions } from '@/hooks/use-swipe-actions';
-import { useTrashQueueCount } from '@/stores/session-store';
+import { useFavoriteCount, useTrashCount } from '@/stores/app-store';
 import { Asset } from 'expo-media-library';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -12,12 +12,13 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SwipeScreen() {
-  const { assets, isLoading, error, remainingCount } = usePhotos();
+  const { assets, isLoading, error } = usePhotos();
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const { onSwipeLeft, onSwipeRight, onSwipeUp, undo } = useSwipeActions();
   const { bottom, top } = useSafeAreaInsets();
-  const trashQueueCount = useTrashQueueCount();
+  const trashCount = useTrashCount();
+  const favoriteCount = useFavoriteCount();
 
   const currentAsset = assets[currentIndex];
 
@@ -64,10 +65,10 @@ export default function SwipeScreen() {
 
   return (
     <View style={[styles.container, { paddingBottom: bottom, paddingTop: top }]}>
-      <SwipeHeader/>
+      <SwipeHeader />
       <StatsBar
-        trashCount={trashQueueCount}
-        favoriteCount={0}
+        trashCount={trashCount}
+        favoriteCount={favoriteCount}
         isPro={false}
         trashLimit={50}
         favoriteLimit={50}
@@ -77,17 +78,17 @@ export default function SwipeScreen() {
       <View style={styles.cardArea}>
         <CardStack assets={assets} currentIndex={currentIndex} onSwipe={handleSwipe} />
       </View>
-        <ActionBar
-          isEmpty={!currentAsset}
-          onRefresh={() => {}}
-          onTrash={() => handleButtonPress('left')}
-          onKeep={() => handleButtonPress('right')}
-          onFavorite={() => handleButtonPress('up')}
-          trashCount={trashQueueCount}
-          favoriteCount={0}
-          onLongTrashPress={() => {}}
-          onLongFavoritePress={() => router.push('/favorites')}
-        />
+      <ActionBar
+        isEmpty={!currentAsset}
+        onRefresh={() => {}}
+        onTrash={() => handleButtonPress('left')}
+        onKeep={() => handleButtonPress('right')}
+        onFavorite={() => handleButtonPress('up')}
+        trashCount={trashCount}
+        favoriteCount={favoriteCount}
+        onLongTrashPress={() => {}}
+        onLongFavoritePress={() => router.push('/favorites')}
+      />
     </View>
   );
 }

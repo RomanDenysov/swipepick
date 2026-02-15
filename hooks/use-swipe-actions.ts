@@ -1,40 +1,53 @@
-import { markPhotoViewed, updatePhotoAction } from '@/db/queries/viewed-photos';
-import { useSessionActions } from '@/stores/session-store';
-import { useCallback } from 'react';
+import { useAppActions } from '@/stores/app-store';
+import { useCallback, useRef } from 'react';
+
+type UndoEntry = {
+  photoId: string;
+  type: 'trash' | 'favorite';
+};
+
+const MAX_UNDO = 10;
 
 export function useSwipeActions() {
-  const { pushUndo, popUndo, incrementTrash } = useSessionActions();
+  const { markPhoto } = useAppActions();
+  const undoStackRef = useRef<UndoEntry[]>([]);
 
   const onSwipeLeft = useCallback(
     (photoId: string) => {
-      markPhotoViewed(photoId, 'trash');
-      incrementTrash();
-      pushUndo({ photoId, type: 'trash', timestamp: Date.now() });
+      markPhoto(photoId, 'trash');
+      const entry: UndoEntry = { photoId, type: 'trash' };
+      undoStackRef.current = [...undoStackRef.current, entry].slice(-MAX_UNDO);
     },
-    [pushUndo, incrementTrash]
+    [markPhoto]
   );
 
-  const onSwipeRight = useCallback((photoId: string) => {
-    markPhotoViewed(photoId, 'keep');
-    // 'keep' doesn't go to undo stack - it's the default/safe action
-  }, []);
+  const onSwipeRight = useCallback(
+    (photoId: string) => {
+      markPhoto(photoId, 'keep');
+    },
+    [markPhoto]
+  );
 
   const onSwipeUp = useCallback(
     (photoId: string) => {
-      markPhotoViewed(photoId, 'favorite');
-      pushUndo({ photoId, type: 'favorite', timestamp: Date.now() });
+      markPhoto(photoId, 'favorite');
+      const entry: UndoEntry = { photoId, type: 'favorite' };
+      undoStackRef.current = [...undoStackRef.current, entry].slice(-MAX_UNDO);
     },
-    [pushUndo]
+    [markPhoto]
   );
 
   const undo = useCallback(() => {
-    const lastAction = popUndo();
-    if (!lastAction) return null;
+    const stack = undoStackRef.current;
+    if (stack.length === 0) return null;
+
+    const last = stack[stack.length - 1];
+    undoStackRef.current = stack.slice(0, -1);
 
     // Revert to 'keep' (safe default)
-    updatePhotoAction(lastAction.photoId, 'keep');
-    return lastAction;
-  }, [popUndo]);
+    markPhoto(last.photoId, 'keep');
+    return last;
+  }, [markPhoto]);
 
   return {
     onSwipeLeft,
