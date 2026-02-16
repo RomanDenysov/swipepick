@@ -54,7 +54,7 @@ export function usePhotos(): UsePhotosReturn {
       after: cursor,
     });
 
-    const unviewedAssets = result.assets.filter((asset) => !viewedIdsRef.current.has(asset.id));
+    const unviewedAssets = result.assets.filter((asset) => !(asset.id in viewedIdsRef.current));
 
     return {
       assets: unviewedAssets,
@@ -184,7 +184,7 @@ export function usePhotos(): UsePhotosReturn {
     };
   }, [initialLoad]);
 
-  const remainingCount = Math.max(0, loadState.totalCount - viewedIdsRef.current.size);
+  const remainingCount = Math.max(0, loadState.totalCount - Object.keys(viewedIdsRef.current).length);
 
   return {
     assets,

@@ -77,8 +77,7 @@ export const useThemeMode = () => useAppStore((s) => s.themeMode);
 
 export const useAppActions = () => useAppStore((s) => s.actions);
 
-export const useViewedPhotoIds = () =>
-  useAppStore((s) => new Set(Object.keys(s.viewedPhotos)));
+export const useViewedPhotoIds = () => useAppStore((s) => s.viewedPhotos);
 
 export const useTrashCount = () =>
   useAppStore((s) => Object.values(s.viewedPhotos).filter((a) => a === 'trash').length);

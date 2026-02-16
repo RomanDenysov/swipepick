@@ -1,17 +1,21 @@
 import { theme } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { osName } from "expo-device";
 import { isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Stack } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
-export default function TabsLayout() {
-  const { isDark } = useAppTheme();
-  const isIOS = Platform.OS === 'ios';
+const isIOS = Platform.OS === 'ios';
+const isIPad = Platform.OS === 'ios' && Platform.isPad;
+const hasLiquidGlass = isLiquidGlassAvailable();
 
-  const tabBarBackgroundColor = useThemeColor(theme.color.background);
+export default function MainLayout() {
+  const { isDark } = useAppTheme();
+  const backgroundColor = useThemeColor(theme.color.background);
+
+  const blurEffect = hasLiquidGlass ? undefined : isDark ? 'dark' : 'light';
+  const transparentBg = hasLiquidGlass ? 'transparent' : backgroundColor;
 
   return (
     <Stack>
@@ -19,47 +23,39 @@ export default function TabsLayout() {
       <Stack.Screen
         name="favorites"
         options={{
-          presentation: 'card',
+          presentation: 'modal',
           headerTitle: 'Favorites',
-          headerBackButtonDisplayMode: 'minimal',
           headerLargeTitleEnabled: true,
-          headerTransparent: isIOS ? true : false,
-          headerBlurEffect: isLiquidGlassAvailable() ? undefined : isDark ? 'dark' : 'light',
+          headerTransparent: isIOS,
+          headerBlurEffect: blurEffect,
+          contentStyle: { backgroundColor: transparentBg },
         }}
       />
       <Stack.Screen
         name="trash"
         options={{
-          headerTitle: '',
-          headerBackButtonDisplayMode: 'minimal',
-          headerLargeTitle: false,
-          headerTransparent: isIOS ? true : false,
-          headerBlurEffect: isLiquidGlassAvailable() ? undefined : isDark ? 'dark' : 'light',
-           presentation: isIOS ? isLiquidGlassAvailable() && osName === 'iPadOS' ? 'formSheet' : 'modal' : 'modal', 
+          presentation: 'modal',
+          headerTitle: 'Trash',
+          headerLargeTitleEnabled: true,
+          headerTransparent: isIOS,
+          headerBlurEffect: blurEffect,
+          contentStyle: { backgroundColor: transparentBg },
         }}
       />
       <Stack.Screen
         name="settings"
         options={{
-          presentation: isIOS ? isLiquidGlassAvailable() && osName === 'iPadOS' ? 'formSheet' : 'modal' : 'modal',
-          headerTitle: '',
+          presentation: isIPad ? 'formSheet' : 'modal',
+          headerTitle: 'Settings',
+          headerTransparent: isIOS,
+          headerBlurEffect: blurEffect,
           sheetGrabberVisible: true,
-                sheetAllowedDetents: [0.8],
-                sheetInitialDetentIndex: 0,
-          headerLargeTitle: false,
-         contentStyle: {
-                  backgroundColor: isLiquidGlassAvailable()
-                    ? "transparent"
-                    : tabBarBackgroundColor,
-                },
-                headerStyle: {
-                  backgroundColor:
-                    Platform.OS === "ios"
-                      ? "transparent"
-                      : tabBarBackgroundColor,
-                },
-          headerTransparent: isIOS ? true : false,
-          headerBlurEffect: isLiquidGlassAvailable() ? undefined : isDark ? 'dark' : 'light',
+          sheetAllowedDetents: [0.8],
+          sheetInitialDetentIndex: 0,
+          contentStyle: { backgroundColor: transparentBg },
+          headerStyle: {
+            backgroundColor: isIOS ? 'transparent' : backgroundColor,
+          },
         }}
       />
     </Stack>
