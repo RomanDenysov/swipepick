@@ -10,11 +10,11 @@ import {
   View,
 } from 'react-native';
 
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import * as MediaLibrary from 'expo-media-library';
 import { Asset } from 'expo-media-library';
 import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 
 import { theme } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
@@ -128,10 +128,6 @@ export default function TrashScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
-      <Text style={[styles.hint, { color: textSecondaryColor }]}>
-        Tap a photo to deselect it and keep it
-      </Text>
-
       <FlatList
         data={assets}
         renderItem={renderItem}
@@ -139,6 +135,12 @@ export default function TrashScreen() {
         numColumns={NUM_COLUMNS}
         contentContainerStyle={styles.grid}
         columnWrapperStyle={styles.row}
+        contentInsetAdjustmentBehavior="automatic"
+        ListHeaderComponent={
+          <Text style={[styles.hint, { color: textSecondaryColor }]}>
+            Tap a photo to deselect it and keep it
+          </Text>
+        }
       />
 
       <View style={styles.footer}>

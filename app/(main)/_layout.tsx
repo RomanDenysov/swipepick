@@ -35,7 +35,7 @@ export default function MainLayout() {
         name="trash"
         options={{
           presentation: 'modal',
-          headerTitle: 'Trash',
+          headerTitle: 'Deleted Photos',
           headerLargeTitleEnabled: true,
           headerTransparent: isIOS,
           headerBlurEffect: blurEffect,
