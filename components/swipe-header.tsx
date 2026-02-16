@@ -1,6 +1,6 @@
+import { SFIcon } from '@/components/sf-icon';
 import { theme } from '@/constants/theme';
 import { useTrashCount } from '@/stores/app-store';
-import { Ionicons } from '@expo/vector-icons';
 import { Link, useRouter } from 'expo-router';
 import { Pressable, StyleSheet } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
@@ -14,14 +14,14 @@ export function SwipeHeader() {
     <Animated.View entering={FadeIn.duration(1000)} style={styles.header}>
       <Link href="/trash" asChild>
         <Pressable style={styles.titleCountBadge}>
-          <Ionicons name="trash" size={20} style={{ color: theme.color.background.light }} />
+          <SFIcon name="trash" size={20} color={theme.color.background.light} />
           <ThemedText fontSize={16} fontWeight="semibold" color={theme.color.background}>
             {trashCount}/50
           </ThemedText>
         </Pressable>
       </Link>
       <Pressable onPress={() => router.push('/settings')}>
-        <Ionicons name="ellipsis-horizontal" size={24} />
+        <SFIcon name="ellipsis-horizontal" size={24} />
       </Pressable>
     </Animated.View>
   );

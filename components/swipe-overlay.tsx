@@ -1,4 +1,7 @@
-import { Ionicons } from '@expo/vector-icons';
+import { SFIcon } from '@/components/sf-icon';
+import { theme } from '@/constants/theme';
+import type { Ionicons } from '@expo/vector-icons';
+import type { ComponentProps } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
@@ -11,24 +14,21 @@ interface Props {
 
 const CONFIG: Record<
   OverlayType,
-  { icon: keyof typeof Ionicons.glyphMap; color: string; bgColor: string; position: object }
+  { icon: ComponentProps<typeof Ionicons>['name']; bgColor: string; position: object }
 > = {
   trash: {
     icon: 'trash',
-    color: '#fff',
-    bgColor: '#ff4757',
+    bgColor: theme.colorTrash,
     position: { top: 20, left: 20 },
   },
   keep: {
     icon: 'checkmark-circle',
-    color: '#fff',
-    bgColor: '#2ed573',
+    bgColor: theme.colorKeep,
     position: { top: 20, right: 20 },
   },
   favorite: {
     icon: 'star',
-    color: '#fff',
-    bgColor: '#ffa502',
+    bgColor: theme.colorFavorite,
     position: { top: 20, left: '50%', marginLeft: -24 },
   },
 };
@@ -39,7 +39,7 @@ export function SwipeOverlay({ type, animatedStyle }: Props) {
   return (
     <Animated.View style={[styles.container, config.position, animatedStyle]}>
       <View style={[styles.iconWrapper, { backgroundColor: config.bgColor }]}>
-        <Ionicons name={config.icon} size={28} color={config.color} />
+        <SFIcon name={config.icon} size={28} color={theme.colorWhite} />
       </View>
     </Animated.View>
   );
@@ -56,10 +56,6 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
   },
 });

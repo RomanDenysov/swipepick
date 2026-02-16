@@ -1,6 +1,8 @@
+import { theme } from '@/constants/theme';
+import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { Asset } from 'expo-media-library';
-import { Dimensions, StyleSheet } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolation,
@@ -13,10 +15,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SwipeOverlayCard } from '../swipe-overlay-card';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-
-const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
-const SWIPE_UP_THRESHOLD = SCREEN_HEIGHT * 0.15;
 const VELOCITY_THRESHOLD = 500;
 
 type SwipeDirection = 'left' | 'right' | 'up';
@@ -27,11 +25,22 @@ interface Props {
   onPress?: () => void;
 }
 
+function triggerHaptic() {
+  if (process.env.EXPO_OS === 'ios') {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  }
+}
+
 export function SwipeableCard({ asset, onSwipe, onPress }: Props) {
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
+  const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
+  const SWIPE_UP_THRESHOLD = SCREEN_HEIGHT * 0.15;
+
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
   const handleSwipeComplete = (direction: SwipeDirection) => {
+    triggerHaptic();
     onSwipe(direction);
   };
 
@@ -135,8 +144,9 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     borderRadius: 16,
+    borderCurve: 'continuous',
     overflow: 'hidden',
-    backgroundColor: '#1a1a2e',
+    backgroundColor: theme.colorCardBackground,
   },
   image: {
     flex: 1,

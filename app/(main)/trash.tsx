@@ -1,40 +1,39 @@
-import { useCallback, useState } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  Dimensions,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-
-import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
-import * as MediaLibrary from 'expo-media-library';
-import { Asset } from 'expo-media-library';
-import { router } from 'expo-router';
-
+import { SFIcon } from '@/components/sf-icon';
 import { theme } from '@/constants/theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { useTrashPhotos } from '@/hooks/use-trash-photos';
 import { useAppActions } from '@/stores/app-store';
+import { Image } from 'expo-image';
+import * as MediaLibrary from 'expo-media-library';
+import { Asset } from 'expo-media-library';
+import { router } from 'expo-router';
+import { useCallback, useState } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 const NUM_COLUMNS = 3;
 const GAP = theme.space4;
-const screenWidth = Dimensions.get('window').width;
-const itemSize = (screenWidth - GAP * (NUM_COLUMNS + 1)) / NUM_COLUMNS;
 
 export default function TrashScreen() {
   const { assets, isLoading } = useTrashPhotos();
   const { markPhoto, removePhoto } = useAppActions();
   const [deselected, setDeselected] = useState<Set<string>>(new Set());
+  const { width: screenWidth } = useWindowDimensions();
 
   const textSecondaryColor = useThemeColor(theme.color.textSecondary);
   const backgroundColor = useThemeColor(theme.color.background);
 
   const selectedCount = assets.length - deselected.size;
+  const itemSize = (screenWidth - GAP * (NUM_COLUMNS + 1)) / NUM_COLUMNS;
 
   const toggleSelection = useCallback((id: string) => {
     setDeselected((prev) => {
@@ -89,7 +88,10 @@ export default function TrashScreen() {
       const isSelected = !deselected.has(item.id);
 
       return (
-        <Pressable style={styles.itemContainer} onPress={() => toggleSelection(item.id)}>
+        <Pressable
+          style={[styles.itemContainer, { width: itemSize, height: itemSize }]}
+          onPress={() => toggleSelection(item.id)}
+        >
           <Image
             source={{ uri: item.uri }}
             style={styles.thumbnail}
@@ -97,16 +99,16 @@ export default function TrashScreen() {
             recyclingKey={item.id}
           />
           {isSelected && (
-            <View style={styles.selectedOverlay}>
+            <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.selectedOverlay}>
               <View style={styles.checkBadge}>
-                <Ionicons name="checkmark" size={14} color={theme.colorWhite} />
+                <SFIcon name="checkmark" size={14} color={theme.colorWhite} />
               </View>
-            </View>
+            </Animated.View>
           )}
         </Pressable>
       );
     },
-    [deselected, toggleSelection]
+    [deselected, toggleSelection, itemSize]
   );
 
   if (isLoading) {
@@ -120,7 +122,7 @@ export default function TrashScreen() {
   if (assets.length === 0) {
     return (
       <View style={[styles.centered, { backgroundColor }]}>
-        <Ionicons name="trash-outline" size={48} color={textSecondaryColor} />
+        <SFIcon name="trash-outline" size={48} color={textSecondaryColor} />
         <Text style={[styles.emptyText, { color: textSecondaryColor }]}>No trashed photos</Text>
       </View>
     );
@@ -149,7 +151,7 @@ export default function TrashScreen() {
           onPress={handleConfirmDelete}
           disabled={selectedCount === 0}
         >
-          <Ionicons name="trash" size={20} color={theme.colorWhite} />
+          <SFIcon name="trash" size={20} color={theme.colorWhite} />
           <Text style={styles.deleteButtonText}>
             Delete{selectedCount > 0 ? ` (${selectedCount})` : ''}
           </Text>
@@ -183,9 +185,8 @@ const styles = StyleSheet.create({
     marginBottom: GAP,
   },
   itemContainer: {
-    width: itemSize,
-    height: itemSize,
     borderRadius: theme.borderRadius6,
+    borderCurve: 'continuous',
     overflow: 'hidden',
   },
   thumbnail: {
@@ -197,6 +198,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: theme.colorRed,
     borderRadius: theme.borderRadius6,
+    borderCurve: 'continuous',
   },
   checkBadge: {
     position: 'absolute',
@@ -225,6 +227,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colorRed,
     paddingVertical: theme.space12,
     borderRadius: theme.borderRadius12,
+    borderCurve: 'continuous',
   },
   deleteButtonDisabled: {
     opacity: 0.4,
@@ -232,6 +235,7 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     fontFamily: theme.fontFamilySemiBold,
     fontSize: theme.fontSize16,
+    fontVariant: ['tabular-nums'],
     color: theme.colorWhite,
   },
 });

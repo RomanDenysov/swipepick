@@ -1,18 +1,18 @@
-import { usePhotos } from "@/hooks/use-photos";
-import { useSwipeActions } from "@/hooks/use-swipe-actions";
-import { useFavoriteCount, useTrashCount } from "@/stores/app-store";
-import { Asset } from "expo-media-library";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { ActionBar } from "../cards/action-bar";
-import { CardStack } from "../cards/card-stack";
-import { StatsBar } from "../stats-bar";
-import { SwipeHeader } from "../swipe-header";
+import { usePhotos } from '@/hooks/use-photos';
+import { useSwipeActions } from '@/hooks/use-swipe-actions';
+import { useFavoriteCount, useTrashCount } from '@/stores/app-store';
+import * as Haptics from 'expo-haptics';
+import { Asset } from 'expo-media-library';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { ActionBar } from '../cards/action-bar';
+import { CardStack } from '../cards/card-stack';
+import { StatsBar } from '../stats-bar';
+import { SwipeHeader } from '../swipe-header';
 
 export function SwipeScreen() {
-
-      const { assets, isLoading, error, loadMore, refresh, hasMore } = usePhotos();
+  const { assets, isLoading, error, loadMore, refresh, hasMore } = usePhotos();
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const { onSwipeLeft, onSwipeRight, onSwipeUp, undo, canUndo } = useSwipeActions();
@@ -40,6 +40,9 @@ export function SwipeScreen() {
 
   const handleButtonPress = (direction: 'left' | 'right' | 'up') => {
     if (currentAsset) {
+      if (process.env.EXPO_OS === 'ios') {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      }
       handleSwipe(direction, currentAsset);
     }
   };
@@ -47,6 +50,9 @@ export function SwipeScreen() {
   const handleUndo = () => {
     const lastAction = undo();
     if (lastAction) {
+      if (process.env.EXPO_OS === 'ios') {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
       setCurrentIndex((prev) => Math.max(0, prev - 1));
     }
   };

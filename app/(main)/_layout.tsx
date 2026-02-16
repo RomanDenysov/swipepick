@@ -2,12 +2,12 @@ import { theme } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
 import { isLiquidGlassAvailable } from 'expo-glass-effect';
+import * as Device from 'expo-device';
 import { Stack } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
 
-const isIOS = Platform.OS === 'ios';
-const isIPad = Platform.OS === 'ios' && Platform.isPad;
+const isIOS = process.env.EXPO_OS === 'ios';
+const isIPad = Device.osName === 'iPadOS';
 const hasLiquidGlass = isLiquidGlassAvailable();
 
 export default function MainLayout() {

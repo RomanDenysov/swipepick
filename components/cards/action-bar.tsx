@@ -1,5 +1,7 @@
-import { Ionicons } from '@expo/vector-icons';
+import { theme } from '@/constants/theme';
+import { SFIcon } from '@/components/sf-icon';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 interface Props {
   onTrash: () => void;
@@ -36,20 +38,17 @@ export function ActionBar({
         disabled={isEmpty}
         onLongPress={onLongTrashPress}
       >
-        <Ionicons name="trash" size={28} color="#fff" />
+        <SFIcon name="trash" size={28} color={theme.colorWhite} />
         {trashCount > 0 && (
-          <View style={styles.badge}>
+          <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.badge}>
             <Text style={styles.badgeText}>{trashCount}</Text>
-          </View>
+          </Animated.View>
         )}
       </Pressable>
 
       {isEmpty ? (
-        <Pressable
-          style={[styles.button, styles.refreshButton]}
-          onPress={onRefresh}
-        >
-          <Ionicons name="refresh" size={32} color="#fff" />
+        <Pressable style={[styles.button, styles.refreshButton]} onPress={onRefresh}>
+          <SFIcon name="refresh" size={32} color={theme.colorWhite} />
         </Pressable>
       ) : (
         <Pressable
@@ -57,7 +56,7 @@ export function ActionBar({
           onPress={onFavorite}
           disabled={isEmpty}
         >
-          <Ionicons name="star" size={32} color="#fff" />
+          <SFIcon name="star" size={32} color={theme.colorWhite} />
         </Pressable>
       )}
 
@@ -66,16 +65,18 @@ export function ActionBar({
         onPress={onKeep}
         disabled={isEmpty}
       >
-        <Ionicons name="checkmark" size={32} color="#fff" />
+        <SFIcon name="checkmark" size={32} color={theme.colorWhite} />
       </Pressable>
 
       {canUndo && onUndo && (
-        <Pressable
-          style={({ pressed }) => [styles.button, styles.undoButton, pressed && styles.pressed]}
-          onPress={onUndo}
-        >
-          <Ionicons name="arrow-undo" size={24} color="#fff" />
-        </Pressable>
+        <Animated.View entering={FadeIn} exiting={FadeOut}>
+          <Pressable
+            style={({ pressed }) => [styles.button, styles.undoButton, pressed && styles.pressed]}
+            onPress={onUndo}
+          >
+            <SFIcon name="arrow-undo" size={24} color={theme.colorWhite} />
+          </Pressable>
+        </Animated.View>
       )}
     </View>
   );
@@ -95,23 +96,19 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.25)',
   },
   trashButton: {
-    backgroundColor: '#ff4757',
+    backgroundColor: theme.colorTrash,
   },
   favoriteButton: {
-    backgroundColor: '#ffa502',
+    backgroundColor: theme.colorFavorite,
     width: 70,
     height: 70,
     borderRadius: 35,
   },
   keepButton: {
-    backgroundColor: '#2ed573',
+    backgroundColor: theme.colorKeep,
   },
   pressed: {
     opacity: 0.8,
@@ -121,7 +118,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colorWhite,
     borderRadius: 10,
     paddingHorizontal: 4,
     paddingVertical: 2,
@@ -129,21 +126,19 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: '#000',
+    fontVariant: ['tabular-nums'],
+    color: theme.colorBlack,
   },
   undoButton: {
-    backgroundColor: '#8395a7',
+    backgroundColor: theme.colorUndo,
     width: 44,
     height: 44,
     borderRadius: 22,
   },
   refreshButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: theme.colorRefresh,
     width: 70,
     height: 70,
     borderRadius: 35,
-  },
-  disabled: {
-    opacity: 0.3,
   },
 });

@@ -15,6 +15,15 @@ export const theme = {
   colorDarkGreen: '#1AC9A2',
   colorGrey: '#ADB5BD',
 
+  // Action colors
+  colorTrash: '#ff4757',
+  colorFavorite: '#ffa502',
+  colorKeep: '#2ed573',
+  colorUndo: '#8395a7',
+  colorRefresh: '#3498db',
+  colorCardBackground: '#1a1a2e',
+  colorMuted: '#888',
+
   color: {
     reactBlue: {
       light: '#087EA4',

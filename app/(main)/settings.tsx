@@ -1,15 +1,23 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function SettingsScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Settings</Text>
-    </View>
+    <ScrollView
+      contentInsetAdjustmentBehavior="automatic"
+      contentContainerStyle={styles.contentContainer}
+    >
+      <View style={styles.centered}>
+        <Text>Settings</Text>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  contentContainer: {
+    flexGrow: 1,
+  },
+  centered: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

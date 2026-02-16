@@ -6,7 +6,7 @@ import { useAppActions } from '@/stores/app-store';
 import * as MediaLibrary from 'expo-media-library';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Linking, Platform, StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, View } from 'react-native';
 
 export default function PermissionsScreen() {
   const router = useRouter();
@@ -36,7 +36,7 @@ export default function PermissionsScreen() {
   };
 
   const handleOpenSettings = () => {
-    if (Platform.OS === 'ios') {
+    if (process.env.EXPO_OS === 'ios') {
       Linking.openURL('app-settings:');
     } else {
       Linking.openSettings();

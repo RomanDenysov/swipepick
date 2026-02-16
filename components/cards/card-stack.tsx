@@ -1,10 +1,8 @@
+import { theme } from '@/constants/theme';
 import { Asset } from 'expo-media-library';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { StyleSheet, Text, View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { SwipeableCard } from './swipeable-card';
-
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-const CARD_WIDTH = SCREEN_WIDTH - 32;
 
 interface Props {
   assets: Asset[];
@@ -20,9 +18,9 @@ export function CardStack({ assets, currentIndex, onSwipe, onPress }: Props) {
 
   if (visibleAssets.length === 0) {
     return (
-      <View style={styles.emptyContainer}>
+      <Animated.View entering={FadeIn} style={styles.emptyContainer}>
         <Text style={styles.emptyText}>No more photos to review</Text>
-      </View>
+      </Animated.View>
     );
   }
 
@@ -63,9 +61,8 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     position: 'absolute',
-    // Размеры задаём здесь, не в SwipeableCard
     width: '90%',
-    aspectRatio: 3 / 4, // или height: '75%'
+    aspectRatio: 3 / 4,
   },
   emptyContainer: {
     flex: 1,
@@ -74,6 +71,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 18,
-    color: '#888',
+    color: theme.colorMuted,
   },
 });

@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import { SFIcon } from '@/components/sf-icon';
 import { format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,25 +12,16 @@ interface Props {
 export const PhotoMeta = ({ asset }: Props) => {
   return (
     <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.container}>
-      <Text style={styles.filename} numberOfLines={1}>
+      <Text style={styles.filename} numberOfLines={1} selectable>
         {asset.filename}
       </Text>
 
       <View style={styles.row}>
-        <Ionicons name="calendar-outline" size={14} color="#aaa" />
+        <SFIcon name="calendar-outline" size={14} color="#aaa" />
         <Text style={styles.meta}>
           {format(asset.creationTime, 'MMM d, yyyy', { locale: enUS })}
         </Text>
       </View>
-
-      {/* {asset.location && (
-        <View style={styles.row}>
-          <Ionicons name="location-outline" size={14} color="#aaa" />
-          <Text style={styles.meta}>
-            {asset.location.latitude.toFixed(4)}, {asset.location.longitude.toFixed(4)}
-          </Text>
-        </View>
-      )} */}
     </LinearGradient>
   );
 };

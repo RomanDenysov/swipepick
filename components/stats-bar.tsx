@@ -1,5 +1,6 @@
-import { StyleSheet, View } from "react-native";
-import { RadialProgress } from "./radial-progress";
+import { theme } from '@/constants/theme';
+import { StyleSheet, View } from 'react-native';
+import { RadialProgress } from './radial-progress';
 
 type Props = {
   trashCount: number;
@@ -9,25 +10,32 @@ type Props = {
   favoriteLimit: number;
   onTrashPress: () => void;
   onFavoritePress: () => void;
-}
+};
 
-export function StatsBar({ trashCount, favoriteCount, isPro, trashLimit, favoriteLimit, onTrashPress, onFavoritePress }: Props) {
-
+export function StatsBar({
+  trashCount,
+  favoriteCount,
+  isPro,
+  trashLimit,
+  favoriteLimit,
+  onTrashPress,
+  onFavoritePress,
+}: Props) {
   return (
     <View style={styles.container}>
       <RadialProgress
         current={trashCount}
         limit={isPro ? Infinity : trashLimit}
         icon="trash"
-        color="#ff4757"
+        color={theme.colorTrash}
         onPress={onTrashPress}
       />
-      
+
       <RadialProgress
         current={favoriteCount}
         limit={isPro ? Infinity : favoriteLimit}
         icon="star"
-        color="#ffa502"
+        color={theme.colorFavorite}
         onPress={onFavoritePress}
       />
     </View>

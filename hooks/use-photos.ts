@@ -184,7 +184,10 @@ export function usePhotos(): UsePhotosReturn {
     };
   }, [initialLoad]);
 
-  const remainingCount = Math.max(0, loadState.totalCount - Object.keys(viewedIdsRef.current).length);
+  const remainingCount = Math.max(
+    0,
+    loadState.totalCount - Object.keys(viewedIdsRef.current).length
+  );
 
   return {
     assets,

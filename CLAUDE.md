@@ -28,6 +28,7 @@ No test framework is configured yet.
 ### State Management
 
 Single Zustand store persisted via MMKV (`lib/mmkv.ts`):
+
 - **`stores/app-store.ts`** — all app state: onboarding, theme, haptics, and viewed photos map (`Record<string, PhotoAction>`). Actions nested under `.actions` property.
 
 Derived selectors (computed, not stored): `useTrashCount`, `useFavoriteCount`, `useViewedPhotoIds`.
