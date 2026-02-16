@@ -58,6 +58,14 @@ export default function MainLayout() {
           },
         }}
       />
+      <Stack.Screen
+        name="photo-viewer"
+        options={{
+          presentation: 'transparentModal',
+          headerShown: false,
+          animation: 'fade',
+        }}
+      />
     </Stack>
   );
 }

@@ -76,7 +76,14 @@ export default function SwipeScreen() {
         onFavoritePress={() => router.push('/favorites')}
       />
       <View style={styles.cardArea}>
-        <CardStack assets={assets} currentIndex={currentIndex} onSwipe={handleSwipe} />
+        <CardStack
+          assets={assets}
+          currentIndex={currentIndex}
+          onSwipe={handleSwipe}
+          onPress={(asset) =>
+            router.push({ pathname: '/photo-viewer', params: { uri: asset.uri } })
+          }
+        />
       </View>
       <ActionBar
         isEmpty={!currentAsset}

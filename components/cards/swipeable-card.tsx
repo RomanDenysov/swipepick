@@ -24,15 +24,24 @@ type SwipeDirection = 'left' | 'right' | 'up';
 interface Props {
   asset: Asset;
   onSwipe: (direction: SwipeDirection) => void;
+  onPress?: () => void;
 }
 
-export function SwipeableCard({ asset, onSwipe }: Props) {
+export function SwipeableCard({ asset, onSwipe, onPress }: Props) {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
   const handleSwipeComplete = (direction: SwipeDirection) => {
     onSwipe(direction);
   };
+
+  const tapGesture = Gesture.Tap()
+    .maxDistance(10)
+    .onEnd(() => {
+      if (onPress) {
+        runOnJS(onPress)();
+      }
+    });
 
   const panGesture = Gesture.Pan()
     .onUpdate((e) => {
@@ -104,7 +113,7 @@ export function SwipeableCard({ asset, onSwipe }: Props) {
   }));
 
   return (
-    <GestureDetector gesture={panGesture}>
+    <GestureDetector gesture={Gesture.Exclusive(panGesture, tapGesture)}>
       <Animated.View style={[styles.card, cardStyle]}>
         <Image
           source={{ uri: asset.uri }}
