@@ -3,13 +3,13 @@ import { useCallback, useRef } from 'react';
 
 type UndoEntry = {
   photoId: string;
-  type: 'trash' | 'favorite';
+  type: 'trash' | 'keep' | 'favorite';
 };
 
 const MAX_UNDO = 10;
 
 export function useSwipeActions() {
-  const { markPhoto } = useAppActions();
+  const { markPhoto, removePhoto } = useAppActions();
   const undoStackRef = useRef<UndoEntry[]>([]);
 
   const onSwipeLeft = useCallback(
@@ -24,6 +24,8 @@ export function useSwipeActions() {
   const onSwipeRight = useCallback(
     (photoId: string) => {
       markPhoto(photoId, 'keep');
+      const entry: UndoEntry = { photoId, type: 'keep' };
+      undoStackRef.current = [...undoStackRef.current, entry].slice(-MAX_UNDO);
     },
     [markPhoto]
   );
@@ -44,15 +46,17 @@ export function useSwipeActions() {
     const last = stack[stack.length - 1];
     undoStackRef.current = stack.slice(0, -1);
 
-    // Revert to 'keep' (safe default)
-    markPhoto(last.photoId, 'keep');
+    removePhoto(last.photoId);
     return last;
-  }, [markPhoto]);
+  }, [removePhoto]);
+
+  const canUndo = undoStackRef.current.length > 0;
 
   return {
     onSwipeLeft,
     onSwipeRight,
     onSwipeUp,
     undo,
+    canUndo,
   };
 }

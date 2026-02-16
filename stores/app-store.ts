@@ -1,4 +1,5 @@
 import { mmkvStorage } from '@/lib/mmkv';
+import { useShallow } from 'zustand/shallow';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
@@ -77,10 +78,19 @@ export const useThemeMode = () => useAppStore((s) => s.themeMode);
 
 export const useAppActions = () => useAppStore((s) => s.actions);
 
-export const useViewedPhotoIds = () => useAppStore((s) => s.viewedPhotos);
+export const useViewedPhotos = () => useAppStore((s) => s.viewedPhotos);
 
 export const useTrashCount = () =>
   useAppStore((s) => Object.values(s.viewedPhotos).filter((a) => a === 'trash').length);
 
 export const useFavoriteCount = () =>
   useAppStore((s) => Object.values(s.viewedPhotos).filter((a) => a === 'favorite').length);
+
+export const useTrashPhotoIds = () =>
+  useAppStore(
+    useShallow((s) =>
+      Object.entries(s.viewedPhotos)
+        .filter(([, action]) => action === 'trash')
+        .map(([id]) => id)
+    )
+  );

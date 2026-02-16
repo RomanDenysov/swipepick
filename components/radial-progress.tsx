@@ -20,7 +20,7 @@ const RADIUS = (SIZE - STROKE_WIDTH) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 export function RadialProgress({ current, limit, icon, color, onPress }: Props) {
-    const progress = Math.min(current / limit, 1)
+    const progress = limit === 0 ? 1 : Math.min(current / limit, 1)
   const strokeDashoffset = CIRCUMFERENCE * (1 - progress);
   
   const isFull = current >= limit;

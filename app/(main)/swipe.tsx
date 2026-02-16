@@ -7,20 +7,26 @@ import { useSwipeActions } from '@/hooks/use-swipe-actions';
 import { useFavoriteCount, useTrashCount } from '@/stores/app-store';
 import { Asset } from 'expo-media-library';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SwipeScreen() {
-  const { assets, isLoading, error } = usePhotos();
+  const { assets, isLoading, error, loadMore, refresh, hasMore } = usePhotos();
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { onSwipeLeft, onSwipeRight, onSwipeUp, undo } = useSwipeActions();
+  const { onSwipeLeft, onSwipeRight, onSwipeUp, undo, canUndo } = useSwipeActions();
   const { bottom, top } = useSafeAreaInsets();
   const trashCount = useTrashCount();
   const favoriteCount = useFavoriteCount();
 
   const currentAsset = assets[currentIndex];
+
+  useEffect(() => {
+    if (hasMore && assets.length > 0 && currentIndex >= assets.length - 5) {
+      loadMore();
+    }
+  }, [currentIndex, assets.length, hasMore, loadMore]);
 
   const handleSwipe = (direction: 'left' | 'right' | 'up', asset: Asset) => {
     if (direction === 'left') {
@@ -87,7 +93,7 @@ export default function SwipeScreen() {
       </View>
       <ActionBar
         isEmpty={!currentAsset}
-        onRefresh={() => {}}
+        onRefresh={refresh}
         onTrash={() => handleButtonPress('left')}
         onKeep={() => handleButtonPress('right')}
         onFavorite={() => handleButtonPress('up')}
@@ -95,6 +101,8 @@ export default function SwipeScreen() {
         favoriteCount={favoriteCount}
         onLongTrashPress={() => {}}
         onLongFavoritePress={() => router.push('/favorites')}
+        onUndo={handleUndo}
+        canUndo={canUndo}
       />
     </View>
   );

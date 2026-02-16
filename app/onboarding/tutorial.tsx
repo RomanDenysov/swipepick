@@ -45,10 +45,10 @@ export default function TutorialScreen() {
             <View style={styles.gestureInfo}>
               <Text style={[styles.gestureTitle, { color: textColor }]}>Swipe Right</Text>
               <Text style={[styles.gestureDescription, { color: textSecondaryColor }]}>
-                Add to favorites
+                Keep photo
               </Text>
             </View>
-            <Text style={[styles.gestureEmoji, { color: theme.colorDarkGreen }]}>❤️</Text>
+            <Text style={[styles.gestureEmoji, { color: theme.colorDarkGreen }]}>✅</Text>
           </View>
 
           <View style={styles.gesture}>
@@ -58,10 +58,10 @@ export default function TutorialScreen() {
             <View style={styles.gestureInfo}>
               <Text style={[styles.gestureTitle, { color: textColor }]}>Swipe Up</Text>
               <Text style={[styles.gestureDescription, { color: textSecondaryColor }]}>
-                Skip for now
+                Add to favorites
               </Text>
             </View>
-            <Text style={[styles.gestureEmoji, { color: textSecondaryColor }]}>⏭️</Text>
+            <Text style={[styles.gestureEmoji, { color: theme.colorDarkGreen }]}>❤️</Text>
           </View>
         </View>
 

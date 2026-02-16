@@ -11,6 +11,8 @@ interface Props {
   onLongFavoritePress: () => void;
   isEmpty: boolean;
   onRefresh: () => void;
+  onUndo?: () => void;
+  canUndo?: boolean;
 }
 
 export function ActionBar({
@@ -23,6 +25,8 @@ export function ActionBar({
   onLongFavoritePress,
   isEmpty,
   onRefresh,
+  onUndo,
+  canUndo,
 }: Props) {
   return (
     <View style={styles.container}>
@@ -60,14 +64,19 @@ export function ActionBar({
       <Pressable
         style={({ pressed }) => [styles.button, styles.keepButton, pressed && styles.pressed]}
         onPress={onKeep}
+        disabled={isEmpty}
       >
         <Ionicons name="checkmark" size={32} color="#fff" />
-        {favoriteCount > 0 && (
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>{favoriteCount}</Text>
-          </View>
-        )}
       </Pressable>
+
+      {canUndo && onUndo && (
+        <Pressable
+          style={({ pressed }) => [styles.button, styles.undoButton, pressed && styles.pressed]}
+          onPress={onUndo}
+        >
+          <Ionicons name="arrow-undo" size={24} color="#fff" />
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -122,7 +131,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000',
   },
-   refreshButton: {
+  undoButton: {
+    backgroundColor: '#8395a7',
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+  },
+  refreshButton: {
     backgroundColor: '#3498db',
     width: 70,
     height: 70,

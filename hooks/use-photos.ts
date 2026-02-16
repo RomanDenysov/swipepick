@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import * as MediaLibrary from 'expo-media-library';
 
-import { useViewedPhotoIds } from '@/stores/app-store';
+import { useViewedPhotos } from '@/stores/app-store';
 
 const BATCH_SIZE = 50;
 
@@ -31,7 +31,7 @@ interface BatchResult {
 }
 
 export function usePhotos(): UsePhotosReturn {
-  const viewedIds = useViewedPhotoIds();
+  const viewedIds = useViewedPhotos();
   const [assets, setAssets] = useState<MediaLibrary.Asset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
