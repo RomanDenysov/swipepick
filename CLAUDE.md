@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SwipePick is a React Native (Expo SDK 54) photo management app. Users swipe through their device photo library to sort photos into keep/trash/favorite categories, similar to a Tinder-style UX. Targets iOS and Android with iPad-specific adaptations.
+SwipePick is a React Native (Expo SDK 55 preview) photo management app. Users swipe through their device photo library to sort photos into keep/trash/favorite categories, similar to a Tinder-style UX. Targets iOS and Android with iPad-specific adaptations.
 
 ## Commands
 
@@ -53,6 +53,13 @@ Zustand pattern: state + `actions` object separated via `partialize` to exclude 
 - Path alias: `@/*` maps to project root
 - Typed routes enabled (`experiments.typedRoutes: true`)
 - React Compiler enabled (`experiments.reactCompiler: true`)
-- New Architecture enabled (`newArchEnabled: true`)
+- New Architecture enabled by default (SDK 55 — no `newArchEnabled` in app.json)
 - Prettier: single quotes, trailing commas (es5), 100 char print width, 2-space tabs
 - iPadOS adaptations: liquid glass effects, form sheet presentations, scaled spacing/fonts
+
+## Gotchas
+
+- App runs in **Expo Go** — no custom dev client. `expo-symbols` (SymbolView) and `expo-image` SF Symbol source (`sf:`) don't work. Use `@expo/vector-icons` for icons.
+- SDK 55 (preview): `newArchEnabled` and `edgeToEdgeEnabled` removed from app.json schema. Native builds may fail — use Expo Go during preview.
+- RN 0.83+: `useColorScheme()` can return `'unspecified'` — don't index `{light, dark}` objects directly with it.
+- `expo-linear-gradient` is deprecated in SDK 55+ — use `experimental_backgroundImage` with CSS gradients on View instead.

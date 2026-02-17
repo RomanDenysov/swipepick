@@ -1,8 +1,8 @@
 import { theme } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { useThemeColor } from '@/hooks/use-theme-color';
-import { isLiquidGlassAvailable } from 'expo-glass-effect';
 import * as Device from 'expo-device';
+import { isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Stack } from 'expo-router';
 import React from 'react';
 
@@ -19,7 +19,7 @@ export default function MainLayout() {
 
   return (
     <Stack>
-      <Stack.Screen name="swipe" options={{ headerShown: false }} />
+      <Stack.Screen name="swipe" options={{  headerTransparent: isIOS, headerBlurEffect: blurEffect, headerShown: false }} />
       <Stack.Screen
         name="favorites"
         options={{
@@ -41,7 +41,9 @@ export default function MainLayout() {
           headerBlurEffect: blurEffect,
           contentStyle: { backgroundColor: transparentBg },
         }}
-      />
+      >
+        <Stack.Screen.BackButton displayMode="minimal">Back</Stack.Screen.BackButton>
+      </Stack.Screen>
       <Stack.Screen
         name="settings"
         options={{
@@ -59,13 +61,15 @@ export default function MainLayout() {
         }}
       />
       <Stack.Screen
-        name="photo-viewer"
+        name="photo"
         options={{
-          presentation: 'transparentModal',
-          headerShown: false,
-          animation: 'fade',
+          title: '',
+ headerTransparent: isIOS,
+          headerBlurEffect: blurEffect,
         }}
-      />
+      >
+        <Stack.Screen.BackButton displayMode='minimal'>Back</Stack.Screen.BackButton>
+      </Stack.Screen>
     </Stack>
   );
 }

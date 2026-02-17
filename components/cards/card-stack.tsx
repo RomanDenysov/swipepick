@@ -8,12 +8,11 @@ interface Props {
   assets: Asset[];
   currentIndex: number;
   onSwipe: (direction: 'left' | 'right' | 'up', asset: Asset) => void;
-  onPress?: (asset: Asset) => void;
 }
 
 const VISIBLE_CARDS = 3;
 
-export function CardStack({ assets, currentIndex, onSwipe, onPress }: Props) {
+export function CardStack({ assets, currentIndex, onSwipe }: Props) {
   const visibleAssets = assets.slice(currentIndex, currentIndex + VISIBLE_CARDS);
 
   if (visibleAssets.length === 0) {
@@ -44,8 +43,8 @@ export function CardStack({ assets, currentIndex, onSwipe, onPress }: Props) {
             <SwipeableCard
               asset={asset}
               onSwipe={(direction) => onSwipe(direction, asset)}
-              onPress={isFirst ? () => onPress?.(asset) : undefined}
-            />
+              />
+
           </Animated.View>
         );
       })}

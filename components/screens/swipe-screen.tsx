@@ -1,19 +1,17 @@
 import { usePhotos } from '@/hooks/use-photos';
 import { useSwipeActions } from '@/hooks/use-swipe-actions';
 import { useFavoriteCount, useTrashCount } from '@/stores/app-store';
+
 import * as Haptics from 'expo-haptics';
 import { Asset } from 'expo-media-library';
-import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ActionBar } from '../cards/action-bar';
+import { SafeAreaView } from 'react-native-screens/experimental';
 import { CardStack } from '../cards/card-stack';
-import { StatsBar } from '../stats-bar';
-import { SwipeHeader } from '../swipe-header';
+
 
 export function SwipeScreen() {
   const { assets, isLoading, error, loadMore, refresh, hasMore } = usePhotos();
-  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const { onSwipeLeft, onSwipeRight, onSwipeUp, undo, canUndo } = useSwipeActions();
   const trashCount = useTrashCount();
@@ -58,9 +56,11 @@ export function SwipeScreen() {
   };
 
   return (
-    <View style={[styles.container]}>
-      <SwipeHeader />
-      <StatsBar
+
+    
+    <SafeAreaView edges={{bottom: true}} style={[styles.container]}>
+      {/* <SwipeHeader /> */}
+      {/* <StatsBar
         trashCount={trashCount}
         favoriteCount={favoriteCount}
         isPro={false}
@@ -68,18 +68,18 @@ export function SwipeScreen() {
         favoriteLimit={50}
         onTrashPress={() => router.push('/trash')}
         onFavoritePress={() => router.push('/favorites')}
-      />
+      /> */}
       <View style={styles.cardArea}>
         <CardStack
           assets={assets}
           currentIndex={currentIndex}
           onSwipe={handleSwipe}
-          onPress={(asset) =>
-            router.push({ pathname: '/photo-viewer', params: { uri: asset.uri } })
-          }
         />
       </View>
-      <ActionBar
+      <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+
+      </View>
+      {/* <ActionBar
         isEmpty={!currentAsset}
         onRefresh={refresh}
         onTrash={() => handleButtonPress('left')}
@@ -91,14 +91,15 @@ export function SwipeScreen() {
         onLongFavoritePress={() => router.push('/favorites')}
         onUndo={handleUndo}
         canUndo={canUndo}
-      />
-    </View>
+      /> */}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: 16,
   },
   cardArea: {
     flex: 1,

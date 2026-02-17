@@ -2,7 +2,8 @@ import { theme } from '@/constants/theme';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { Asset } from 'expo-media-library';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { Link } from 'expo-router';
+import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolation,
@@ -22,7 +23,6 @@ type SwipeDirection = 'left' | 'right' | 'up';
 interface Props {
   asset: Asset;
   onSwipe: (direction: SwipeDirection) => void;
-  onPress?: () => void;
 }
 
 function triggerHaptic() {
@@ -31,10 +31,10 @@ function triggerHaptic() {
   }
 }
 
-export function SwipeableCard({ asset, onSwipe, onPress }: Props) {
+export function SwipeableCard({ asset, onSwipe }: Props) {
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
-  const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
-  const SWIPE_UP_THRESHOLD = SCREEN_HEIGHT * 0.15;
+  const SWIPE_THRESHOLD = SCREEN_WIDTH * 1;
+  const SWIPE_UP_THRESHOLD = SCREEN_HEIGHT * 0.5;
 
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -43,14 +43,6 @@ export function SwipeableCard({ asset, onSwipe, onPress }: Props) {
     triggerHaptic();
     onSwipe(direction);
   };
-
-  const tapGesture = Gesture.Tap()
-    .maxDistance(10)
-    .onEnd(() => {
-      if (onPress) {
-        runOnJS(onPress)();
-      }
-    });
 
   const panGesture = Gesture.Pan()
     .onUpdate((e) => {
@@ -63,17 +55,17 @@ export function SwipeableCard({ asset, onSwipe, onPress }: Props) {
       const swipedUp = translateY.value < -SWIPE_UP_THRESHOLD || e.velocityY < -VELOCITY_THRESHOLD;
 
       if (swipedUp) {
-        translateY.value = withTiming(-SCREEN_HEIGHT, { duration: 300 });
+        translateY.value = withTiming(-SCREEN_HEIGHT, { duration: 500 });
         runOnJS(handleSwipeComplete)('up');
       } else if (swipedRight) {
-        translateX.value = withTiming(SCREEN_WIDTH * 1.5, { duration: 300 });
+        translateX.value = withTiming(SCREEN_WIDTH * 1.5, { duration: 500 });
         runOnJS(handleSwipeComplete)('right');
       } else if (swipedLeft) {
-        translateX.value = withTiming(-SCREEN_WIDTH * 1.5, { duration: 300 });
+        translateX.value = withTiming(-SCREEN_WIDTH * 1.5, { duration: 500 });
         runOnJS(handleSwipeComplete)('left');
       } else {
-        translateX.value = withSpring(0, { damping: 15 });
-        translateY.value = withSpring(0, { damping: 15 });
+        translateX.value = withSpring(0, { damping: 50 });
+        translateY.value = withSpring(0, { damping: 50 });
       }
     });
 
@@ -122,21 +114,27 @@ export function SwipeableCard({ asset, onSwipe, onPress }: Props) {
   }));
 
   return (
-    <GestureDetector gesture={Gesture.Exclusive(panGesture, tapGesture)}>
-      <Animated.View style={[styles.card, cardStyle]}>
-        <Image
-          source={{ uri: asset.uri }}
-          style={styles.image}
-          contentFit="cover"
-          transition={200}
-        />
-        <SwipeOverlayCard
-          trashOpacity={trashOpacity}
-          keepOpacity={keepOpacity}
-          favoriteOpacity={favoriteOpacity}
-        />
-      </Animated.View>
-    </GestureDetector>
+    <Link href={`/photo?uri=${asset.uri}&width=${asset.width}&height=${asset.height}`} asChild>
+      <Pressable style={{flex: 1}}>
+        <GestureDetector gesture={panGesture}>
+          <Animated.View style={[styles.card, cardStyle]}>
+            <Link.AppleZoom>
+              <Image
+                source={{ uri: asset.uri }}
+                style={styles.image}
+                contentFit="cover"
+                transition={200}
+              />
+            </Link.AppleZoom>
+            <SwipeOverlayCard
+              trashOpacity={trashOpacity}
+              keepOpacity={keepOpacity}
+              favoriteOpacity={favoriteOpacity}
+            />
+          </Animated.View>
+        </GestureDetector>
+      </Pressable>
+    </Link>
   );
 }
 
